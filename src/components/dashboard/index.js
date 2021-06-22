@@ -1,10 +1,30 @@
 import React from 'react'
+import {Drawer, Button} from 'rsuite'
+import { useProfile } from '../../context/profile.context'
+const Dashboard = ({onSignOut}) => {
 
-const Dashboard = () => {
+  const {profile} = useProfile();
   return (
-    <div>
-      hello
-    </div>
+    <>
+    <Drawer.Header>
+      <Drawer.Title>
+        Dashboard
+
+      </Drawer.Title>
+    </Drawer.Header>
+
+    <Drawer.Body>
+      <h3>hey, {profile.name}</h3>
+
+    </Drawer.Body>
+
+    <Drawer.Footer>
+      <Button block color="orange" onClick={onSignOut}>
+        Sign Out
+      </Button>
+
+    </Drawer.Footer>
+    </>
   )
 }
 
