@@ -1,5 +1,6 @@
 import React from 'react'
 import DashboardToggle from './dashboard/DashboardToggle'
+import CreateRoomBtnModal from './CreateRoomBtnModal'
 
 const Sidebar = () => {
   return (
@@ -7,6 +8,7 @@ const Sidebar = () => {
       
       <div style={{marginTop:"10px"}}>
         <DashboardToggle />
+        <CreateRoomBtnModal/>
       </div>
 
       bottom
