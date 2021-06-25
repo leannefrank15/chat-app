@@ -3,7 +3,7 @@ import React ,{ createContext, useContext, useEffect } from "react";
 import { useState } from "react";
 import { auth, database } from "../misc/firebase";
 
-const ProfileContext=createContext(); //creating a context
+const ProfileContext= createContext(); //creating a context
 
 export const ProfileProvider =({children})=> {
   const [profile, setProfile] = useState(null)
@@ -12,43 +12,41 @@ export const ProfileProvider =({children})=> {
   useEffect(()=> {
 
     let userRef;
-   const authUnsub = auth.onAuthStateChanged(authObj =>{
+   const authUnsub = auth.onAuthStateChanged(authObj => {
     if(authObj){
 
       userRef = database.ref(`/profiles/${authObj.uid}`);
-      userRef.on('value', (snap)=> {
-        const {name, createdAt} = snap.val();
+      userRef.on('value', snap => {
+        const {name, createdAt, avatar} = snap.val();
 
           const data={
             name,
             createdAt,
+            avatar,
             uid: authObj.uid,
             email: authObj.email
           }
           setProfile(data);
           setIsLoading(false);
       })
-
-      
-      return ()=> {
-        authUnsub();
-
-        if(userRef){
-          userRef.off();
-        }
-      }
     }
-    else
-    {if (userRef){
+    else{
+      if(userRef){
        userRef.off();
     }
 
       setProfile(null);
       setIsLoading(false);
     }
-    })
+    });
 
+    return ()=> {
+      authUnsub();
 
+      if(userRef){
+        userRef.off();
+      }
+    }
   },[])
   
 

@@ -4,12 +4,13 @@ import { useModalState } from '../../misc/custom.hooks';
 import AvatarEditor from 'react-avatar-editor'
 import { database, storage } from '../../misc/firebase';
 import { useProfile } from '../../context/profile.context';
+import ProfileAvatar from '../ProfileAvatar';
 
 
 const fileInputTypes = ".png, .jpeg, .jpg";
 const acceptedFileTypes = ['image/png', 'image/jpeg', 'image/pjpeg']
 
-const isValidFile = (file) => acceptedFileTypes.includes(file.type);
+const isValidFile = file => acceptedFileTypes.includes(file.type);
 
 const getBlob = (canvas) => {
   return new Promise((resolve, reject) => {
@@ -51,6 +52,7 @@ const AvatarUploadBtn = () => {
   }
 
   const onUploadClick = async () => {
+
      const canvas = avatarEditorRef.current.getImageScaledToCanvas();
 
 
@@ -68,7 +70,7 @@ const AvatarUploadBtn = () => {
        const downloadUrl = await uploadAvatarResult.ref.getDownloadURL()
        const userAvatarRef = database.ref(`/profiles/${profile.uid}`).child('avatar');
 
-       userAvatarRef.set(downloadUrl);
+      await userAvatarRef.set(downloadUrl);
        setIsLoading(false);
 
        Alert.info('Avatar uploaded!', 4000);
@@ -76,7 +78,7 @@ const AvatarUploadBtn = () => {
      }
      catch(err){
        setIsLoading(false);
-       Alert.error(err.message, 4000);
+       Alert.error('error bc', 4000);
 
      }
   }
@@ -84,9 +86,15 @@ const AvatarUploadBtn = () => {
   return (
     <div className="mt-3 text-center">
 
+      <div style={{ marginTop: "5px"}}>
+      <ProfileAvatar
+      src={profile.avatar} name={profile.name} className="width-200 height-200 img-fullsize font-huge"/>
+      </div>
+
        <div>
+         
          <label htmlFor="avatar-upload" className="d-block cursor-pointer padded">
-           Select new Avatar
+           Edit your display 
 
            <input id="avatar-upload" type="file" 
            className="d-none" accept={fileInputTypes}
@@ -94,6 +102,7 @@ const AvatarUploadBtn = () => {
            />
 
          </label>
+        
 
          <Modal show={isOpen} onHide={close}>
 
